@@ -8,7 +8,7 @@ app.use(cors());
 
 const API_KEY = "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";
 
-app.post("/completions", async (_req, res) => {
+app.post("/completions", async (req, res) => {
   try {
     const options = {
       method: "POST",
@@ -18,7 +18,7 @@ app.post("/completions", async (_req, res) => {
       },
       body: JSON.stringify({
         model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: "how are you" }],
+        messages: [{ role: "user", content: req.body.message }],
         max_tokens: 100,
       }),
     };
