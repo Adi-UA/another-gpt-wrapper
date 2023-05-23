@@ -1,120 +1,89 @@
 "use client";
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState, useEffect } from "react";
+import Sidebar from "./Sidebar";
+import { Chat, Message, SendMessageRequest } from "@/interfaces";
+import Feed from "./Feed";
+import BottomSection from "./BottomSection";
 
 export default function Home() {
-  const [inputValue, setInputValue] = useState("");
-  const [message, setMessage] = useState<{ role: string; content: string }>();
-  const [curTitle, setCurTtle] = useState<string | null>(null);
-  const [prevChats, setPrevChats] = useState<
-    { title: string; role: string; content: string }[]
-  >([]);
+  const [message, setMessage] = useState<Message | null>(null);
+  const [curTitle, setCurTitle] = useState<string | null>(null);
+  const [prevChats, setPrevChats] = useState<Chat[]>([]);
 
-  const getMessages = async () => {
-    if (inputValue.length > 0) {
-      const options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+  const updateTitle = (inputValue: string) => {
+    if (!curTitle) {
+      setCurTitle(inputValue);
+    }
+  };
+
+  const updatePrevChats = (
+    title: string,
+    inputValue: string,
+    message: Message
+  ) => {
+    if (title) {
+      setPrevChats((prevChats) => [
+        ...prevChats,
+        {
+          title: title,
+          role: "user",
+          content: inputValue,
         },
-        body: JSON.stringify({
-          message: inputValue,
-        }),
-      };
-      try {
-        const response = await fetch("/api/completions", options);
-        const data = await response.json();
-        setMessage(data.choices[0].message);
-      } catch (error) {
-        console.error(error);
-      }
+        { title: title, role: message.role, content: message.content },
+      ]);
+    }
+  };
+
+  const sendMessageAndGetResponse = async (inputValue: string) => {
+    const options: SendMessageRequest = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: inputValue,
+      }),
+    };
+
+    try {
+      const response = await fetch("/api/completions", options);
+      const data = await response.json();
+      const msg: Message = data.choices[0].message;
+      setMessage(msg);
+      updateTitle(inputValue);
+      const title = curTitle ? curTitle : inputValue;
+      updatePrevChats(title, inputValue, msg);
+    } catch (error) {
+      console.error(error);
     }
   };
 
   const createNewChat = () => {
-    setMessage(undefined);
-    setInputValue("");
-    setCurTtle(null);
+    setMessage(null);
+    setCurTitle(null);
   };
 
   const changeActiveChat = (uniqueTitle: string) => {
-    setCurTtle(uniqueTitle);
-    setMessage(undefined);
-    setInputValue("");
+    setCurTitle(uniqueTitle);
+    setMessage(null);
   };
-
-  useEffect(() => {
-    console.log(curTitle, inputValue, message);
-    if (!curTitle && inputValue && message) {
-      setCurTtle(inputValue);
-    }
-    if (curTitle && inputValue && message) {
-      setPrevChats((prevChats) => [
-        ...prevChats,
-        {
-          title: curTitle,
-          role: "user",
-          content: inputValue,
-        },
-        { title: curTitle, role: message.role, content: message.content },
-      ]);
-    }
-  }, [message, curTitle]);
-
-  const curChat = prevChats.filter((prevChat) => prevChat.title === curTitle);
-  const uniqueTitles = Array.from(
-    new Set(prevChats.map((prevChat) => prevChat.title))
-  );
 
   return (
     <div className="app">
-      <section className="side-bar">
-        <button onClick={createNewChat}>Start New Chat</button>
-        <ul className="history">
-          {uniqueTitles.map((uniqueTitle, idx) => (
-            <li
-              onClick={() => {
-                changeActiveChat(uniqueTitle);
-              }}
-              key={idx}
-            >
-              {uniqueTitle}
-            </li>
-          ))}
-        </ul>
-        <nav>
-          <p>Made by Adi with &lt;3</p>
-        </nav>
-      </section>
+      <Sidebar
+        newChatHandler={createNewChat}
+        changeActiveChatHandler={changeActiveChat}
+        prevChats={prevChats}
+      ></Sidebar>
       <section className="main">
-        {!curTitle && <h1>AdiGPT</h1>}
-        <ul className="feed">
-          {curChat.map((chat, idx) => (
-            <li key={idx}>
-              <p className="feed-role">{chat.role}</p>
-              <p>{chat.content}</p>
-            </li>
-          ))}
-        </ul>
-        <div className="bottom-section">
-          <div className="input-container">
-            <input
-              value={inputValue}
-              onChange={(e: ChangeEvent) => {
-                const target = e.target as HTMLTextAreaElement;
-                setInputValue(target.value);
-              }}
-              placeholder="Submit a new message"
-              type="text"
-            />
-            <div id="submit" onClick={getMessages}>
-              →
-            </div>
-          </div>
-          <p className="info">
-            Free Research Preview. ChatGPT may produce inaccurate information
-            about people, places, or facts.
-          </p>
-        </div>
+        <h1 className="title">AdiGPT</h1>
+        <Feed
+          curChat={prevChats.filter((prevChat) => prevChat.title === curTitle)}
+        ></Feed>
+        <BottomSection
+          curTitle={curTitle}
+          sendMessagehandler={sendMessageAndGetResponse}
+        ></BottomSection>
       </section>
     </div>
   );

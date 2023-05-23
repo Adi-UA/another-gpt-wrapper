@@ -1,3 +1,11 @@
+export type SendMessageRequest = {
+  method: string;
+  headers: {
+    "Content-Type": string;
+  };
+  body: string;
+};
+
 export type ChatCompetionsRequest = {
   method: string;
   headers: {
@@ -14,4 +22,12 @@ export type ChatCompetionsRequestBody = {
     content: string;
   }[];
   max_tokens: number;
+};
+
+export type Message = { role: string; content: string };
+
+export type Chat = {
+  title: string;
+  role: string;
+  content: string;
 };
