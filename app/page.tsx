@@ -10,25 +10,39 @@ export default function Home() {
   >([]);
 
   const getMessages = async () => {
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message: inputValue,
-      }),
-    };
-    try {
-      const response = await fetch(
-        "http://localhost:8000/completions",
-        options
-      );
-      const data = await response.json();
-      setMessage(data.choices[0].message);
-    } catch (error) {
-      console.error(error);
+    if (inputValue.length > 0) {
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: inputValue,
+        }),
+      };
+      try {
+        const response = await fetch(
+          "http://localhost:8000/completions",
+          options
+        );
+        const data = await response.json();
+        setMessage(data.choices[0].message);
+      } catch (error) {
+        console.error(error);
+      }
     }
+  };
+
+  const createNewChat = () => {
+    setMessage(undefined);
+    setInputValue("");
+    setCurTtle(null);
+  };
+
+  const changeActiveChat = (uniqueTitle: string) => {
+    setCurTtle(uniqueTitle);
+    setMessage(undefined);
+    setInputValue("");
   };
 
   useEffect(() => {
@@ -49,14 +63,26 @@ export default function Home() {
     }
   }, [message, curTitle]);
 
-  console.log(prevChats);
+  const curChat = prevChats.filter((prevChat) => prevChat.title === curTitle);
+  const uniqueTitles = Array.from(
+    new Set(prevChats.map((prevChat) => prevChat.title))
+  );
 
   return (
     <div className="app">
       <section className="side-bar">
-        <button>Start New Chat</button>
+        <button onClick={createNewChat}>Start New Chat</button>
         <ul className="history">
-          <li>Temp</li>
+          {uniqueTitles.map((uniqueTitle, idx) => (
+            <li
+              onClick={() => {
+                changeActiveChat(uniqueTitle);
+              }}
+              key={idx}
+            >
+              {uniqueTitle}
+            </li>
+          ))}
         </ul>
         <nav>
           <p>Made by Adi with &lt;3</p>
@@ -64,7 +90,14 @@ export default function Home() {
       </section>
       <section className="main">
         {!curTitle && <h1>AdiGPT</h1>}
-        <ul className="feed"></ul>
+        <ul className="feed">
+          {curChat.map((chat, idx) => (
+            <li key={idx}>
+              <p className="feed-role">{chat.role}</p>
+              <p>{chat.content}</p>
+            </li>
+          ))}
+        </ul>
         <div className="bottom-section">
           <div className="input-container">
             <input

@@ -104,3 +104,27 @@ nav {
   right: 2%;
   cursor: pointer;
 }
+
+.feed {
+  overflow-y: scroll;
+  width: 100%;
+  padding: 0;
+}
+
+.feed li {
+  display: flex;
+  background-color: #444654;
+  width: 100%;
+  padding: 5%;
+  margin: 4% 0;
+}
+
+.feed p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.8em;
+  text-align: left;
+}
+
+.feed p.role {
+  min-width: 100px;
+}
