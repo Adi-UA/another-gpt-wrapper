@@ -12,7 +12,9 @@ const queryClient = new QueryClient();
 export default function Home() {
   const [curTitle, setCurTitle] = useState<string | null>(null);
   const [chats, setPrevChats] = useState<Chat[]>([]);
-  const [showSideBar, setShowSideBar] = useState(!(window.screen.width <= 768));
+  const [showSideBar, setShowSideBar] = useState(
+    window && !(window.screen.width <= 768)
+  );
   const titles = Array.from(new Set(chats.map((chat) => chat.title)));
   const curConversationChats = chats.filter((chat) => chat.title === curTitle);
 
