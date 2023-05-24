@@ -11,6 +11,9 @@ const queryClient = new QueryClient();
 export default function Home() {
   const [curTitle, setCurTitle] = useState<string | null>(null);
   const [chats, setPrevChats] = useState<Chat[]>([]);
+  const [showSideBar, setShowSideBar] = useState(
+    window.screen.width <= 768 ? false : true
+  );
   const titles = Array.from(new Set(chats.map((chat) => chat.title)));
   const curConversationChats = chats.filter((chat) => chat.title === curTitle);
 
@@ -38,16 +41,26 @@ export default function Home() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="bg-slate-800 flex">
-        <Sidebar
-          createNewChat={() => {
-            setCurTitle(null);
+        {showSideBar && (
+          <Sidebar
+            createNewChat={() => {
+              setCurTitle(null);
+            }}
+            changeCurChat={setCurTitle}
+            titles={titles}
+            curTitle={curTitle}
+          ></Sidebar>
+        )}
+        <span
+          onClick={() => {
+            setShowSideBar(!showSideBar);
           }}
-          changeCurChat={setCurTitle}
-          titles={titles}
-          curTitle={curTitle}
-        ></Sidebar>
+          className="inline absolute p-3 right-3 text-xl md:hidden lg:hidden"
+        >
+          {" "}
+          Menu
+        </span>
         <section className="h-screen w-full flex flex-col justify-between items-center text-center">
-          <h1 className="text-xl/8 font-bold">AdiGPT</h1>
           <Feed curChat={curConversationChats}></Feed>
           <BottomSection updatePage={updatePage}></BottomSection>
         </section>
