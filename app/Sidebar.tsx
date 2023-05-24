@@ -1,6 +1,6 @@
-import ChatHistory from "./ChatHistory";
-import DevCallout from "./DevCallout";
-import NewChatButton from "./NewChatButton";
+import ChatHistory from './ChatHistory';
+import DevCallout from './DevCallout';
+import NewChatButton from './NewChatButton';
 
 interface SidebarProps {
   createNewChat: () => void;
@@ -9,18 +9,20 @@ interface SidebarProps {
   titles: string[];
 }
 
-const Sidebar = (props: SidebarProps) => {
+function Sidebar(props: SidebarProps) {
+  const { createNewChat, curTitle, changeCurChat, titles } = props;
+
   return (
     <section className="bg-slate-900 flex flex-col justify-between h-screen w-[25vw]">
-      <NewChatButton createNewChat={props.createNewChat}></NewChatButton>
+      <NewChatButton createNewChat={createNewChat} />
       <ChatHistory
-        curTitle={props.curTitle}
-        changeCurChat={props.changeCurChat}
-        titles={props.titles}
-      ></ChatHistory>
-      <DevCallout></DevCallout>
+        curTitle={curTitle}
+        changeCurChat={changeCurChat}
+        titles={titles}
+      />
+      <DevCallout />
     </section>
   );
-};
+}
 
 export default Sidebar;

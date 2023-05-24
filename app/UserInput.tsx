@@ -1,30 +1,31 @@
-"use client";
-import { Message, SendMessageRequest } from "@/interfaces";
-import { useQuery } from "@tanstack/react-query";
-import { ChangeEvent, useEffect, useState } from "react";
-import LoadingSpinner from "./LoadingSpinner";
+'use client';
+
+import { useQuery } from '@tanstack/react-query';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { Message, SendMessageRequest } from '@/interfaces';
+import LoadingSpinner from './LoadingSpinner';
 
 interface UserInputProps {
   updatePage: (input: string, msg: Message) => void;
 }
 
-const UserInput = (props: UserInputProps) => {
-  const [inputValue, setInputValue] = useState("");
-  const updatePage = props.updatePage;
+function UserInput(props: UserInputProps) {
+  const [inputValue, setInputValue] = useState('');
+  const { updatePage } = props;
 
   const { isFetching, refetch } = useQuery({
-    queryKey: ["completions"],
+    queryKey: ['completions'],
     queryFn: async () => {
       const options: SendMessageRequest = {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           message: inputValue,
         }),
       };
-      const response = await fetch("/api/completions", options);
+      const response = await fetch('/api/completions', options);
       const data = await response.json();
       const msg: Message = data.choices[0].message;
       updatePage(inputValue, msg);
@@ -35,7 +36,7 @@ const UserInput = (props: UserInputProps) => {
   });
 
   useEffect(() => {
-    setInputValue("");
+    setInputValue('');
   }, [isFetching]);
 
   return (
@@ -48,26 +49,27 @@ const UserInput = (props: UserInputProps) => {
           setInputValue(target.value);
         }}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && !isFetching) {
+          if (e.key === 'Enter' && !isFetching) {
             refetch();
           }
         }}
         placeholder="Submit a new message"
         type="text"
       />
-      {isFetching && <LoadingSpinner></LoadingSpinner>}
+      {isFetching && <LoadingSpinner />}
       {!isFetching && (
-        <div
+        <button
+          type="button"
           className="absolute cursor-pointer bottom-[25%] right-[2%]"
           onClick={() => {
             refetch();
           }}
         >
           →
-        </div>
+        </button>
       )}
     </div>
   );
-};
+}
 
 export default UserInput;

@@ -1,7 +1,7 @@
 export type SendMessageRequest = {
   method: string;
   headers: {
-    "Content-Type": string;
+    'Content-Type': string;
   };
   body: string;
 };
@@ -10,7 +10,7 @@ export type ChatCompetionsRequest = {
   method: string;
   headers: {
     Authorization: string;
-    "Content-Type": string;
+    'Content-Type': string;
   };
   body: string;
 };

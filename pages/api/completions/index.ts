@@ -1,30 +1,30 @@
-import { NextApiResponse, NextApiRequest } from "next";
-import { ChatCompetionsRequest, ChatCompetionsRequestBody } from "@/interfaces";
+import { NextApiResponse, NextApiRequest } from 'next';
+import { ChatCompetionsRequest, ChatCompetionsRequestBody } from '@/interfaces';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (process.env.COMPLETIONS_MODEL) {
     const requestBody: ChatCompetionsRequestBody = {
       model: process.env.COMPLETIONS_MODEL,
-      messages: [{ role: "user", content: req.body.message }],
-      max_tokens: 50,
+      messages: [{ role: 'user', content: req.body.message }],
+      max_tokens: 100,
     };
 
     const requestOptions: ChatCompetionsRequest = {
-      method: "POST",
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${process.env.API_KEY}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestBody),
     };
 
     try {
       const response = await fetch(
-        "https://api.openai.com/v1/chat/completions",
-        requestOptions
+        'https://api.openai.com/v1/chat/completions',
+        requestOptions,
       );
 
       const data = await response.json();
@@ -35,6 +35,6 @@ export default async function handler(
       res.status(500).end();
     }
   } else {
-    console.error("A model must be specified for chat completions");
+    console.error('A model must be specified for chat completions');
   }
 }
