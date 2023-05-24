@@ -14,4 +14,4 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Orrr, use the live website on Vercel at [https://adi-gpt-beta.vercel.app/](https://adi-gpt-beta.vercel.app/)
+Orrr, use the live website on Vercel at [adigpt.vercel.app](https://adigpt.vercel.app/)
