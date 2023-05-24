@@ -3,29 +3,33 @@
 import { Chat } from "@/interfaces";
 
 interface ChatHistoryProps {
-  changeActiveChatHandler: (uniqueTitle: string) => void;
+  changeCurChat: (title: string) => void;
+  curTitle: string | null;
   prevChats: Chat[];
 }
 
 const ChatHistory = (props: ChatHistoryProps) => {
-  const changeActiveChat = props.changeActiveChatHandler;
+  const changeCurChat = props.changeCurChat;
+  const curTitle = props.curTitle;
   const prevChats = props.prevChats;
-  const uniqueTitles = Array.from(
+  const titles = Array.from(
     new Set(prevChats.map((prevChat) => prevChat.title))
   );
 
   return (
-    <ul className="h-full p-[5%] m-[5%]">
-      {uniqueTitles &&
-        uniqueTitles.map((uniqueTitle, idx) => (
+    <ul className="h-full p-[0%] m-[3%]">
+      {titles &&
+        titles.map((title, idx) => (
           <li
-            className="list-none cursor-pointer py-[5%] px-[3%] border-solid border border-slate-500 bg-slate-700 hover:bg-slate-500 text-sm"
+            className={`list-none cursor-pointer py-[5%] px-[3%] m-[3%] rounded-lg ${
+              title === curTitle ? "bg-slate-600" : "bg-slate-800"
+            } hover:bg-slate-400 text-sm`}
             onClick={() => {
-              changeActiveChat(uniqueTitle);
+              changeCurChat(title);
             }}
             key={idx}
           >
-            Chat Title: {uniqueTitle}
+            &#128488; {title}
           </li>
         ))}
     </ul>
