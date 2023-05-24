@@ -16,8 +16,9 @@ const UserInput = (props: UserInputProps) => {
   }, [curTitle]);
 
   return (
-    <div className="input-container">
+    <div className="relative w-full max-w-[650px]">
       <input
+        className="w-full rounded py-[2%] px-[3%] text-[1em] bg-slate-700 shadow-2xl"
         value={inputValue}
         onChange={(e: ChangeEvent) => {
           const target = e.target as HTMLTextAreaElement;
@@ -27,7 +28,7 @@ const UserInput = (props: UserInputProps) => {
         type="text"
       />
       <div
-        id="submit"
+        className="absolute cursor-pointer bottom-[25%] right-[2%]"
         onClick={() => {
           sendMessagehandler(inputValue);
         }}

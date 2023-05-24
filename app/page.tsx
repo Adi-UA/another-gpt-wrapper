@@ -69,14 +69,14 @@ export default function Home() {
   };
 
   return (
-    <div className="app">
+    <div className="bg-slate-800 flex">
       <Sidebar
         newChatHandler={createNewChat}
         changeActiveChatHandler={changeActiveChat}
         prevChats={prevChats}
       ></Sidebar>
-      <section className="main">
-        <h1 className="title">AdiGPT</h1>
+      <section className="h-screen w-full flex flex-col justify-between items-center text-center">
+        <h1 className="text-xl/8 font-bold">AdiGPT</h1>
         <Feed
           curChat={prevChats.filter((prevChat) => prevChat.title === curTitle)}
         ></Feed>

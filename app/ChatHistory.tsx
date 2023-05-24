@@ -15,16 +15,17 @@ const ChatHistory = (props: ChatHistoryProps) => {
   );
 
   return (
-    <ul className="history">
+    <ul className="h-full p-[5%] m-[5%]">
       {uniqueTitles &&
         uniqueTitles.map((uniqueTitle, idx) => (
           <li
+            className="list-none cursor-pointer py-[5%] px-[3%] border-solid border border-slate-500 bg-slate-700 hover:bg-slate-500 text-sm"
             onClick={() => {
               changeActiveChat(uniqueTitle);
             }}
             key={idx}
           >
-            {uniqueTitle}
+            Chat Title: {uniqueTitle}
           </li>
         ))}
     </ul>
