@@ -24,6 +24,11 @@ const UserInput = (props: UserInputProps) => {
           const target = e.target as HTMLTextAreaElement;
           setInputValue(target.value);
         }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            sendMessagehandler(inputValue);
+          }
+        }}
         placeholder="Submit a new message"
         type="text"
       />

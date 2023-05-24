@@ -26,10 +26,13 @@ export default async function handler(
         "https://api.openai.com/v1/chat/completions",
         requestOptions
       );
+
       const data = await response.json();
       res.status(200).json(data);
     } catch (error) {
-      console.error(error);
+      console.log(error);
+      res.json(error);
+      res.status(500).end();
     }
   } else {
     console.error("A model must be specified for chat completions");
