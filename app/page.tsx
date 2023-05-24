@@ -10,16 +10,15 @@ const queryClient = new QueryClient();
 
 export default function Home() {
   const [curTitle, setCurTitle] = useState<string | null>(null);
-  const [prevChats, setPrevChats] = useState<Chat[]>([]);
+  const [chats, setPrevChats] = useState<Chat[]>([]);
+  const titles = Array.from(new Set(chats.map((chat) => chat.title)));
+  const curConversationChats = chats.filter((chat) => chat.title === curTitle);
 
   const updatePage = async (input: string, msg: Message) => {
     // Update the chat title if this is a new chat
-    let title: string;
+    let title: string = curTitle ? curTitle : input;
     if (!curTitle) {
       setCurTitle(input);
-      title = input;
-    } else {
-      title = curTitle;
     }
 
     // Update the stored chat list
@@ -36,30 +35,20 @@ export default function Home() {
     setPrevChats((prevChats) => [...prevChats, chatSent, responseReceived]);
   };
 
-  const createNewChat = () => {
-    setCurTitle(null);
-  };
-
-  const changeActiveChat = (uniqueTitle: string) => {
-    setCurTitle(uniqueTitle);
-  };
-
   return (
     <QueryClientProvider client={queryClient}>
       <div className="bg-slate-800 flex">
         <Sidebar
-          newChatHandler={createNewChat}
+          createNewChat={() => {
+            setCurTitle(null);
+          }}
           changeCurChat={setCurTitle}
-          prevChats={prevChats}
+          titles={titles}
           curTitle={curTitle}
         ></Sidebar>
         <section className="h-screen w-full flex flex-col justify-between items-center text-center">
           <h1 className="text-xl/8 font-bold">AdiGPT</h1>
-          <Feed
-            curChat={prevChats.filter(
-              (prevChat) => prevChat.title === curTitle
-            )}
-          ></Feed>
+          <Feed curChat={curConversationChats}></Feed>
           <BottomSection updatePage={updatePage}></BottomSection>
         </section>
       </div>

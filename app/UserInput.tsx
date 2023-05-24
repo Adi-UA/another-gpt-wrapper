@@ -26,9 +26,9 @@ const UserInput = (props: UserInputProps) => {
       };
       const response = await fetch("/api/completions", options);
       const data = await response.json();
-      const msg = data.choices[0].message;
+      const msg: Message = data.choices[0].message;
       updatePage(inputValue, msg);
-      return;
+      return msg;
     },
     enabled: false,
     refetchOnWindowFocus: false,

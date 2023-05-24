@@ -5,16 +5,13 @@ import { Chat } from "@/interfaces";
 interface ChatHistoryProps {
   changeCurChat: (title: string) => void;
   curTitle: string | null;
-  prevChats: Chat[];
+  titles: string[];
 }
 
 const ChatHistory = (props: ChatHistoryProps) => {
   const changeCurChat = props.changeCurChat;
   const curTitle = props.curTitle;
-  const prevChats = props.prevChats;
-  const titles = Array.from(
-    new Set(prevChats.map((prevChat) => prevChat.title))
-  );
+  const titles = props.titles;
 
   return (
     <ul className="h-full p-[0%] m-[3%]">

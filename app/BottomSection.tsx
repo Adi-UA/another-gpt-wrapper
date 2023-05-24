@@ -9,10 +9,10 @@ const BottomSection = (props: BottomSectionProps) => {
   return (
     <div className="w-full flex flex-col justify-center items-center py-[2%] px-[2%]">
       <UserInput updatePage={props.updatePage}></UserInput>
-      <p className="text-[0.8em] py-[5%] px-[0%] text-[rgba(255, 255, 255, 0.5)]">
-        Free Research Preview. ChatGPT may produce inaccurate information about
-        people, places, or facts. Cannot remember context because tokens cost
-        money lol.
+      <p className="text-[0.8em] py-[5%] px-[5%] text-[rgba(255, 255, 255, 0.5)]">
+        AdiGPT may produce inaccurate information about people, places, or
+        facts. It also cannot remember context and may send incomplete responses
+        due to token limitations put in place for cost purposes.
       </p>
     </div>
   );
