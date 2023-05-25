@@ -4,10 +4,9 @@ It is a ChatGPT clone called AdiGPT because, like me, it can't remember context 
 
 ![](./adi_gpt_selfie.png)
 
-## Getting Started
+## Running
 
-First, run the development server:
-
+Clone the repo and run
 ```bash
 npm run dev
 ```
